@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/FatimetouA/SB_Orch.git'
+                git 'https://github.com/secret-moctar/demo_app'
             }
         }
         stage('Build') {
