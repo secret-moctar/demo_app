@@ -1,34 +1,30 @@
 pipeline {
-    agent any
-    stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/secret-moctar/demo_app'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh 'mvn clean install'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn test' 
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'mvn package' 
-            }
-        }
-        
-    }
-    post {
-        success {
-            echo 'Build succeeded!'
-        }
-        failure {
-            echo 'Build failed!'
-        }
-    }
+agent any
+environment {
+ANSIBLE_INVENTORY = 'path/to/your/inventory/file'
+ANSIBLE_PLAYBOOK = 'path/to/your/playbook.yml'
+
+}
+stages {
+stage('Checkout') {
+steps {
+git branch: 'main', 
+url: 'https://github.com/secret-moctar/demo_app'
+}
+}
+stage('Install Ansible') {
+steps {
+sh 'sudo apt-get update'
+sh 'sudo apt-get install -y ansible'
+}
+}
+stage('Run Ansible Playbook') {
+steps {
+ansiblePlaybook(
+playbook: "${ANSIBLE_PLAYBOOK}",
+inventory: "${ANSIBLE_INVENTORY}"
+)
+}
+}
+}
 }
